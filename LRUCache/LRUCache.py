@@ -1,3 +1,5 @@
+# A slow LRU cache.
+# Simply stores all values as pairs in a list.
 class SlowCache(object):
     def __init__(self, capacity):
         if capacity < 1: raise ValueError('Invalid capacity')
@@ -27,6 +29,8 @@ class SlowCache(object):
             
             self.stack.append([key, value])
 
+# A medium speed LRU cache.
+# Use a dictionary to speed up lookup time.
 class MedCache(object):
     def __init__(self, capacity):
         if capacity < 1: raise ValueError('Invalid capacity')
@@ -55,6 +59,8 @@ class MedCache(object):
             self.stack.append(key)
             self.cache[key] = value
 
+# A fast LRU cache.
+# Store all values in nodes of a doubly linked list.
 class FastCache(object):
     class _Node(object):
         def __init__(self, key, value):
