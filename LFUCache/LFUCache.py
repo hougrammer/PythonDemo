@@ -44,11 +44,11 @@ class LFUCache(object):
     def __init__(self, capacity):
         self.capacity = capacity if capacity else -1
         self.cache = {} # stores key/value pairs
-        self.freq = {0: _FreqNode(0)} # stores frequency nodes
+        self.freq = {0: self._FreqNode(0)} # stores frequency nodes
     
     # Adds frequency node to cache.
     def _addFreqNode(self, prevNode, freq):
-        newNode = _FreqNode(freq)
+        newNode = self._FreqNode(freq)
         newNode.prev, newNode.next = prevNode, prevNode.next
         if prevNode.next: prevNode.next.prev = newNode
         prevNode.next = newNode
@@ -81,17 +81,17 @@ class LFUCache(object):
             self._deleteFreqNode(prevNode)
 
     # Gets a key value from the cache.
+    # Raises KeyError if necessary.
     def get(self, key):
         if self.capacity == -1: return -1
         c, f = self.cache, self.freq
-        
-        if key not in c: return -1
-        
+
         item = c[key]
         self._increaseFreq(item)
         return item.value
 
     # Puts a key value into the cache.
+    # Updates the key vale if it is already in the cache.
     def put(self, key, value):
         if self.capacity == -1: return
         c, f = self.cache, self.freq
@@ -108,7 +108,7 @@ class LFUCache(object):
                     self._deleteFreqNode(f[0].next)
                 del c[removed.key]
                 
-            item = _ItemNode(key, value)
+            item = self._ItemNode(key, value)
             c[key] = item
             if 1 not in f:
                 self._addFreqNode(f[0], 1)
